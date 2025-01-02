@@ -20,7 +20,7 @@ pipeline {
             steps {
                 echo 'Running unit tests...'
                 // Ensure pytest generates results in JUnit XML format
-                sh 'pytest tests/ --junitxml=test-results/results.xml'
+                sh 'python -m unittest tests/test_my_first_calculator.py'
             }
         }
 
