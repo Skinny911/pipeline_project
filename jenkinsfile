@@ -28,8 +28,7 @@ pipeline {
             steps {
                 echo 'Archiving test results...'
                 // Archive test results and other artifacts
-                archiveArtifacts artifacts: '**/test-results/*.xml', allowEmptyArchive: true
-                junit 'test-results/*.xml'
+                archiveArtifacts artifacts: '**/test-results/test_output.txt', allowEmptyArchive: true
             }
         }
     }
