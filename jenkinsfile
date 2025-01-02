@@ -4,40 +4,50 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                echo 'Cloning the Git repository...'
-                git 'https://github.com/Skinny911/pipeline_project.git'
+                // Clone the Git repository
+                git branch: 'main', url: 'https://github.com/Skinny911/pipeline_project.git'
+            }
+        }
+
+        stage('Set Up Environment') {
+            steps {
+                // Create a virtual environment and upgrade pip
+                sh '''
+                python -m venv venv
+                source venv/bin/activate
+                pip install --upgrade pip
+                '''
             }
         }
 
         stage('Run Tests') {
             steps {
-                echo 'Running unit tests...'
-                // Ensure pytest generates results in JUnit XML format
-                sh 'python -m unittest tests/test_my_first_calculator.py > test-results/test_output.txt'
+                // Run tests using unittest and save the output
+                sh '''
+                source venv/bin/activate
+                python -m unittest discover -s tests -p "test_*.py" > test_results.txt
+                '''
             }
         }
 
         stage('Archive Results') {
             steps {
-                echo 'Archiving test results...'
-                // Archive test results and other artifacts
-                archiveArtifacts artifacts: '**/test-results/test_output.txt', allowEmptyArchive: true
+                // Archive the test results file
+                archiveArtifacts artifacts: 'test_results.txt', fingerprint: true
             }
         }
     }
 
     post {
         always {
-            echo 'Cleaning up after pipeline execution...'
-            cleanWs() // Clean up workspace
+            // Cleanup virtual environment
+            sh 'rm -rf venv'
         }
-
         success {
-            echo 'Pipeline executed successfully!'
+            echo 'Pipeline completed successfully!'
         }
-
         failure {
-            echo 'Pipeline failed. Check the logs for details.'
+            echo 'Pipeline failed. Check logs and test results for more details.'
         }
     }
 }
