@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git 'https://github.com/your-repo/sample-project.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'echo "Building application..."'
+                // Use Docker for build
+                sh 'docker build -t sample-app .'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'echo "Running tests..."'
+                // Run unit tests
+                sh 'pytest tests/'
+            }
+        }
+
+        stage('Archive Results') {
+            steps {
+                archiveArtifacts artifacts: '**/test-results/*', allowEmptyArchive: true
+                junit 'test-results/*.xml'
+            }
+        }
+    }
+}
