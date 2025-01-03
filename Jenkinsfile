@@ -40,10 +40,8 @@ pipeline {
 
     post {
         always {
-            node { // Ensure deleteDir runs within the proper context
-                echo 'Cleaning up workspace...'
-                deleteDir()
-            }
+            echo 'Cleaning up workspace...'
+            deleteDir() // Runs fine because it is already in the context of the Docker agent
         }
         success {
             echo 'Pipeline completed successfully!'
