@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'python:3.10'
+            image 'python:3.10' // Using the Python Docker image
         }
     }
 
@@ -40,8 +40,10 @@ pipeline {
 
     post {
         always {
-            echo 'Cleaning up workspace...'
-            deleteDir()
+            node { // Ensure deleteDir runs within the proper context
+                echo 'Cleaning up workspace...'
+                deleteDir()
+            }
         }
         success {
             echo 'Pipeline completed successfully!'
