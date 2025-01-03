@@ -1,17 +1,17 @@
 pipeline {
-    agent any
+    agent {
+        docker { image 'python:3.10' }
+    }
 
     stages {
         stage('Clone Repository') {
             steps {
-                // Clone the Git repository
                 git branch: 'main', url: 'https://github.com/Skinny911/pipeline_project.git'
             }
         }
 
         stage('Set Up Environment') {
             steps {
-                // Create a virtual environment and upgrade pip
                 sh '''
                 python -m venv venv
                 source venv/bin/activate
@@ -22,7 +22,6 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                // Run tests using unittest and save the output
                 sh '''
                 source venv/bin/activate
                 python -m unittest discover -s tests -p "test_*.py" > test_results.txt
@@ -32,7 +31,6 @@ pipeline {
 
         stage('Archive Results') {
             steps {
-                // Archive the test results file
                 archiveArtifacts artifacts: 'test_results.txt', fingerprint: true
             }
         }
@@ -40,7 +38,6 @@ pipeline {
 
     post {
         always {
-            // Cleanup virtual environment
             sh 'rm -rf venv'
         }
         success {
