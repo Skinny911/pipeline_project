@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        docker { image 'python:3.10' }
-    }
+    agent any
 
     stages {
         stage('Clone Repository') {
@@ -13,7 +11,7 @@ pipeline {
         stage('Set Up Environment') {
             steps {
                 sh '''
-                python -m venv venv
+                python3 -m venv venv
                 source venv/bin/activate
                 pip install --upgrade pip
                 '''
@@ -24,7 +22,7 @@ pipeline {
             steps {
                 sh '''
                 source venv/bin/activate
-                python -m unittest discover -s tests -p "test_*.py" > test_results.txt
+                python3 -m unittest discover -s tests -p "test_*.py" > test_results.txt
                 '''
             }
         }
@@ -38,13 +36,14 @@ pipeline {
 
     post {
         always {
-            sh 'rm -rf venv'
+            echo 'Cleaning up workspace...'
+            deleteDir()
         }
         success {
             echo 'Pipeline completed successfully!'
         }
         failure {
-            echo 'Pipeline failed. Check logs and test results for more details.'
+            echo 'Pipeline failed. Check logs for more details.'
         }
     }
 }
