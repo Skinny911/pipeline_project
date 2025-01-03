@@ -41,7 +41,6 @@ pipeline {
     post {
         always {
             echo 'Cleaning up...'
-            // No deleteDir()
         }
         success {
             echo 'Pipeline completed successfully!'
