@@ -12,21 +12,11 @@ pipeline {
             }
         }
 
-        stage('Set Up Environment') {
-            steps {
-                sh '''
-                python3 -m venv venv
-                source venv/bin/activate
-                pip install --upgrade pip
-                '''
-            }
-        }
-
         stage('Run Tests') {
             steps {
                 sh '''
-                source venv/bin/activate
                 python3 -m unittest discover -s tests -p "test_*.py" > test_results.txt
+                cat test_results.txt # Display test results in Jenkins console
                 '''
             }
         }
@@ -40,7 +30,8 @@ pipeline {
 
     post {
         always {
-            echo 'Cleaning up...'
+            echo 'Cleaning up workspace...'
+            cleanWs()
         }
         success {
             echo 'Pipeline completed successfully!'
