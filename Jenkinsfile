@@ -6,17 +6,18 @@ pipeline {
     }
 
     stages {
-        
         stage('Clean Workspace') {
             steps {
                 cleanWs()
             }
+        }
 
         stage('Verify Git Installation') {
             steps {
-                sh 'git --version'
+                sh 'git --version' // Verify if Git is installed
             }
-            
+        }
+
         stage('Clone Repository') {
             steps {
                 git branch: 'main', url: 'https://github.com/Skinny911/pipeline_project.git'
