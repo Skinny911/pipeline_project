@@ -27,7 +27,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 sh '''
-                python3 -m unittest discover -s tests -p "test_*.py" > test_results.txt
+                python -m unittest discover -s tests -p "test_*.py" > test_results.txt
                 cat test_results.txt # Display test results in Jenkins console
                 '''
             }
